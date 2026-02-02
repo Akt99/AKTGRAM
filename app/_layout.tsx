@@ -1,24 +1,35 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+// app/_layout.tsx
+import { useFonts } from "expo-font";
+import { Slot } from "expo-router";
+import { ActivityIndicator, View } from "react-native";
+import { AuthProvider } from "./contexts/AuthContext";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const [fontsLoaded] = useFonts({
+    "JB-Regular": require("../assets/images/fonts/JetBrainsMono-Regular.ttf"),
+    "JB-Medium": require("../assets/images/fonts/JetBrainsMono-Medium.ttf"),
+    "JB-Bold": require("../assets/images/fonts/JetBrainsMono-Bold.ttf"),
+  });
+
+  // ⛔ DO NOT render app until fonts are ready
+  if (!fontsLoaded) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#0A0A0A",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <AuthProvider>
+      <Slot />
+    </AuthProvider>
   );
 }
