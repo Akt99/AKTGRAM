@@ -24,9 +24,32 @@ export default function TabsLayout() {
   }
 
   return (
-    <Tabs>
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+
+        // 🖤 BLACK TAB BAR
+        tabBarStyle: {
+          backgroundColor: "#0B0B0B",
+          borderTopColor: "#1A1A1A",
+          height: 62,
+        },
+
+        // 💛 ACTIVE / INACTIVE COLORS
+        tabBarActiveTintColor: "#FFD600",
+        tabBarInactiveTintColor: "#777",
+
+        // 🧠 LABEL STYLING
+        tabBarLabelStyle: {
+          fontFamily: "JB-Medium",
+          fontSize: 11,
+          marginBottom: 6,
+        },
+      }}
+    >
       <Tabs.Screen name="index" options={{ title: "Home" }} />
       <Tabs.Screen name="explore" options={{ title: "Explore" }} />
+      <Tabs.Screen name="profile" options={{ title: "Profile" }} />
     </Tabs>
   );
 }

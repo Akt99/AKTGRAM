@@ -1,4 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
+import BaseScreen from "../../components/ui/BaseScreen";
 
 const MOCK_DATA = [
   { id: "1", title: "🔥 Trending creators" },
@@ -10,39 +11,43 @@ const MOCK_DATA = [
 
 export default function ExploreScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Explore</Text>
-      <Text style={styles.subtitle}>Discover people & content</Text>
-
+    <BaseScreen>
       <FlatList
         data={MOCK_DATA}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={{ paddingTop: 12 }}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.content}
+        ListHeaderComponent={
+          <>
+            <Text style={styles.title}>Explore</Text>
+            <Text style={styles.subtitle}>Discover people & content</Text>
+          </>
+        }
         renderItem={({ item }) => (
           <View style={styles.item}>
             <Text style={styles.itemText}>{item.title}</Text>
           </View>
         )}
       />
-    </View>
+    </BaseScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#0f0f0f",
+  content: {
     padding: 16,
+    paddingTop: 0, // header already inside list
   },
   title: {
     fontSize: 28,
     fontWeight: "700",
     color: "#ffffff",
+    marginBottom: 4,
   },
   subtitle: {
     fontSize: 14,
     color: "#9ca3af",
-    marginTop: 4,
+    marginBottom: 16,
   },
   item: {
     backgroundColor: "#1c1c1e",

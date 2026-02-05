@@ -20,6 +20,10 @@ export default function Login() {
   const signInWithGoogle = async () => {
     try {
       await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signOut();
+      await GoogleSignin.revokeAccess();
+
+
 
       const userInfo = await GoogleSignin.signIn();
       const idToken = userInfo.data?.idToken;
@@ -49,7 +53,7 @@ export default function Login() {
 
       {/* Brand */}
       <Text style={styles.brand}>AKTGRAM</Text>
-      <Text style={styles.tagline}>Decentralized social layer</Text>
+      <Text style={styles.tagline}>Connect with the world</Text>
 
       {/* Google Button */}
       <TouchableOpacity
@@ -62,7 +66,7 @@ export default function Login() {
 
       {/* Footer */}
       <Text style={styles.footerText}>
-        Built for builders • Web3 native
+        Built for builders • Powered by Firebase & Expo
       </Text>
     </View>
   );

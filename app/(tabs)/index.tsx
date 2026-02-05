@@ -1,35 +1,39 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import BaseScreen from "../../components/ui/BaseScreen";
 
 export default function HomeScreen() {
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Home</Text>
-      <Text style={styles.subtitle}>Your feed will appear here 👇</Text>
+    <BaseScreen>
+      <ScrollView
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.title}>Home</Text>
+        <Text style={styles.subtitle}>Your feed will appear here 👇</Text>
 
-      {/* Placeholder posts */}
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Welcome to AKTGRAM 🎉</Text>
-        <Text style={styles.cardText}>
-          This is the home feed. Soon you’ll see posts from people you follow.
-        </Text>
-      </View>
+        {/* Placeholder posts */}
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Welcome to AKTGRAM 🎉</Text>
+          <Text style={styles.cardText}>
+            This is the home feed. Soon you’ll see posts from people you follow.
+          </Text>
+        </View>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Next steps</Text>
-        <Text style={styles.cardText}>
-          • Fetch posts from Firestore{"\n"}
-          • Like / comment system{"\n"}
-          • Infinite scroll
-        </Text>
-      </View>
-    </ScrollView>
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Next steps</Text>
+          <Text style={styles.cardText}>
+            • Fetch posts from Firestore{"\n"}
+            • Like / comment system{"\n"}
+            • Infinite scroll
+          </Text>
+        </View>
+      </ScrollView>
+    </BaseScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#0f0f0f",
+  content: {
     padding: 16,
   },
   title: {

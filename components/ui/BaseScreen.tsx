@@ -1,4 +1,3 @@
-// components/ui/BaseScreen.tsx
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,7 +11,9 @@ type Props = {
 export default function BaseScreen({ children, style }: Props) {
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>
-      <View style={[styles.container, style]}>{children}</View>
+      <View style={[styles.container, style]}>
+        {children}
+      </View>
     </SafeAreaView>
   );
 }
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: spacing.screenPadding,
-    paddingTop: 24,
+    //paddingTop: 24,
     backgroundColor: colors.background,
   },
 });
