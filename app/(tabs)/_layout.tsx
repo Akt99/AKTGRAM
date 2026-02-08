@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { Redirect, Tabs } from "expo-router";
 import { onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from "react";
@@ -25,7 +26,7 @@ export default function TabsLayout() {
 
   return (
     <Tabs
-      screenOptions={{
+      screenOptions={({ route }) => ({  
         headerShown: false,
 
         // 🖤 BLACK TAB BAR
@@ -34,7 +35,26 @@ export default function TabsLayout() {
           borderTopColor: "#1A1A1A",
           height: 62,
         },
+        
+        tabBarIcon: ({ color, size }) => {
+          let iconName: keyof typeof Ionicons.glyphMap;
 
+          switch (route.name) {
+            case "index":
+              iconName = "home-outline";
+              break;
+            case "explore":
+              iconName = "compass-outline";
+              break;
+            case "profile":
+              iconName = "person-outline";
+              break;
+            default:
+              iconName = "ellipse-outline"; // fallback (never crashes)
+          }
+
+          return <Ionicons name={iconName} size={22} color={color} />;
+        },
         // 💛 ACTIVE / INACTIVE COLORS
         tabBarActiveTintColor: "#FFD600",
         tabBarInactiveTintColor: "#777",
@@ -45,7 +65,7 @@ export default function TabsLayout() {
           fontSize: 11,
           marginBottom: 6,
         },
-      }}
+      })}
     >
       <Tabs.Screen name="index" options={{ title: "Home" }} />
       <Tabs.Screen name="explore" options={{ title: "Explore" }} />
