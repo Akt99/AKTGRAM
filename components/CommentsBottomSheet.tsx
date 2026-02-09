@@ -89,7 +89,6 @@ const CommentsBottomSheet = forwardRef<BottomSheetModal, Props>(
         handleIndicatorStyle={{ backgroundColor: "#444" }}
         onDismiss={() => console.log("🟦 CommentsBottomSheet onDismiss")}
         onChange={(index) => console.log("🟦 CommentsBottomSheet onChange", index)}
-        onPresent={() => console.log("🟦 CommentsBottomSheet onPresent")}
       >
         <View style={styles.container}>
           <View style={styles.headerRow}>

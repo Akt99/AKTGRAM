@@ -5,11 +5,13 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Animated,
   FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from "react-native";
 import PostCard from "../../components/PostCard";
 import BaseScreen from "../../components/ui/BaseScreen";
@@ -19,15 +21,29 @@ export default function HomeScreen() {
   const router = useRouter();
   const { posts, loading } = useFeed();
   const [activePostId, setActivePostId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
   const sheetRef = useRef<BottomSheetModal | null>(null);
 
   return (
     <BaseScreen>
       <FlatList
-        data={loading ? [] : posts}
+        style={{ flex: 1 }}
+        data={loading ? [] : posts.slice(0, page * 10)}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, { paddingBottom: 140 }]}
         showsVerticalScrollIndicator={false}
+        onEndReachedThreshold={0.5}
+        onEndReached={() => {
+          if (loading || loadingMore) return;
+          if ((posts?.length ?? 0) > page * 10) {
+            setLoadingMore(true);
+            setTimeout(() => {
+              setPage((p) => p + 1);
+              setLoadingMore(false);
+            }, 300);
+          }
+        }}
         ListHeaderComponent={
           <>
             <Text style={styles.title}>Home</Text>
@@ -36,17 +52,17 @@ export default function HomeScreen() {
             <TouchableOpacity
               style={{ paddingVertical: 8 }}
               onPress={() => {
-                  console.log("DEBUG: manual open comments. sheetRef:", sheetRef.current);
-                  if (!activePostId && posts?.length) setActivePostId(posts[0].id);
+                console.log("DEBUG: manual open comments. sheetRef:", sheetRef.current);
+                if (!activePostId && posts?.length) setActivePostId(posts[0].id);
+                setTimeout(() => {
+                  console.log("calling present() (debug)", sheetRef.current);
+                  sheetRef.current?.present();
                   setTimeout(() => {
-                    console.log("calling present() (debug)", sheetRef.current);
-                    sheetRef.current?.present();
-                    setTimeout(() => {
-                      console.log("calling expand() (debug)", sheetRef.current);
-                      sheetRef.current?.expand?.();
-                    }, 120);
+                    console.log("calling expand() (debug)", sheetRef.current);
+                    sheetRef.current?.expand?.();
                   }, 120);
-                }}
+                }, 120);
+              }}
             >
               <Text style={{ color: "#9ca3af", marginBottom: 8 }}>Open comments (debug)</Text>
             </TouchableOpacity>
@@ -88,6 +104,16 @@ export default function HomeScreen() {
               }, 120);
             }}
           />
+        )}
+        ListFooterComponent={() => (
+          <View style={{ paddingVertical: 12 }}>
+            {loadingMore ? (
+              <ActivityIndicator size="small" />
+            ) : (posts.length > page * 10 && <Text style={{ textAlign: "center", color: "#9ca3af" }}>Scroll to load more</Text>)}
+            {posts.length <= page * 10 && !loading && (
+              <Text style={{ textAlign: "center", color: "#9ca3af" }}>No more posts</Text>
+            )}
+          </View>
         )}
       />
 

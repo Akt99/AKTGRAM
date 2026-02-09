@@ -1,11 +1,14 @@
 // app/create-post.tsx
 import BaseScreen from "@/components/ui/BaseScreen";
+import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { getDownloadURL, ref as storageRef, uploadBytes } from "firebase/storage";
 import { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Image,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -14,7 +17,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { auth, db } from "../firebase/firebaseConfig";
+import { auth, db, storage } from "../firebase/firebaseConfig";
 
 const MAX_CHARS = 280;
 
@@ -22,6 +25,7 @@ export default function CreatePost() {
   const router = useRouter();
   const [text, setText] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState<string | null>(null);
 
   const remaining = MAX_CHARS - text.length;
   const isDisabled = text.trim().length === 0 || loading;
@@ -38,11 +42,22 @@ export default function CreatePost() {
     try {
       setLoading(true);
 
+      // If an image was selected, upload it to Firebase Storage first
+      let imageURL: string | null = null;
+      if (image) {
+        const response = await fetch(image);
+        const blob = await response.blob();
+        const fileRef = storageRef(storage, `posts/${user.uid}/${Date.now()}.jpg`);
+        await uploadBytes(fileRef, blob);
+        imageURL = await getDownloadURL(fileRef);
+      }
+
       await addDoc(collection(db, "posts"), {
         uid: user.uid,                          // ✅ matches Firestore rules
         text: String(text.trim()),              // ✅ primitive string
         authorName: user.displayName ?? "Unknown",
         authorPhoto: user.photoURL ?? null,
+        imageURL: imageURL ?? null,
         createdAt: serverTimestamp(),            // ✅ required timestamp
         likeCount: 0,
         commentCount: 0,
@@ -54,6 +69,26 @@ export default function CreatePost() {
       Alert.alert("Error", "Failed to create post.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert("Permission required", "Permission to access photos is required.");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.7,
+    });
+
+    if (!result.canceled) {
+      // expo-image-picker v14 returns assets array
+      const uri = (result as any).assets?.[0]?.uri ?? (result as any).uri;
+      if (uri) setImage(uri);
     }
   };
 
@@ -97,6 +132,21 @@ export default function CreatePost() {
           autoFocus
           editable={!loading}
         />
+
+        {/* Image picker + preview */}
+        <View style={styles.imageRow}>
+          <TouchableOpacity onPress={pickImage} disabled={loading} style={styles.imageButton}>
+            <Text style={{ color: "#FFD600", fontWeight: "600" }}>Add Photo</Text>
+          </TouchableOpacity>
+          {image && (
+            <View style={styles.previewRow}>
+              <Image source={{ uri: image }} style={styles.preview} />
+              <TouchableOpacity onPress={() => setImage(null)}>
+                <Text style={{ color: "#777", marginLeft: 8 }}>Remove</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
 
         {/* Footer */}
         <View style={styles.footer}>
@@ -170,5 +220,23 @@ const styles = StyleSheet.create({
 
   counterWarning: {
     color: "#FFD600",
+  },
+  imageRow: {
+    marginTop: 12,
+    marginBottom: 8,
+  },
+  imageButton: {
+    paddingVertical: 8,
+  },
+  previewRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+  },
+  preview: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+    backgroundColor: "#222",
   },
 });
