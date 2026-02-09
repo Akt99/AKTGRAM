@@ -1,11 +1,15 @@
 import FloatingActionButton from "@/components/ui/FloatingActionButton";
+import CommentsBottomSheet from "../../components/CommentsBottomSheet";
+
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useRouter } from "expo-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Animated,
-  ScrollView,
+  FlatList,
   StyleSheet,
-  Text
+  Text,
+  TouchableOpacity,
 } from "react-native";
 import PostCard from "../../components/PostCard";
 import BaseScreen from "../../components/ui/BaseScreen";
@@ -14,58 +18,94 @@ import { useFeed } from "../hooks/useFeed";
 export default function HomeScreen() {
   const router = useRouter();
   const { posts, loading } = useFeed();
+  const [activePostId, setActivePostId] = useState<string | null>(null);
+  const sheetRef = useRef<BottomSheetModal | null>(null);
 
   return (
     <BaseScreen>
-      <ScrollView
+      <FlatList
+        data={loading ? [] : posts}
+        keyExtractor={(item) => item.id}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
-      >
-        <Text style={styles.title}>Home</Text>
-
-        {/* 🔄 LOADING STATE */}
-        {loading && (
+        ListHeaderComponent={
           <>
-            <SkeletonCard />
-            <SkeletonCard />
-            <SkeletonCard />
+            <Text style={styles.title}>Home</Text>
+
+            {/* DEBUG: manual comments opener */}
+            <TouchableOpacity
+              style={{ paddingVertical: 8 }}
+              onPress={() => {
+                  console.log("DEBUG: manual open comments. sheetRef:", sheetRef.current);
+                  if (!activePostId && posts?.length) setActivePostId(posts[0].id);
+                  setTimeout(() => {
+                    console.log("calling present() (debug)", sheetRef.current);
+                    sheetRef.current?.present();
+                    setTimeout(() => {
+                      console.log("calling expand() (debug)", sheetRef.current);
+                      sheetRef.current?.expand?.();
+                    }, 120);
+                  }, 120);
+                }}
+            >
+              <Text style={{ color: "#9ca3af", marginBottom: 8 }}>Open comments (debug)</Text>
+            </TouchableOpacity>
+
+            {loading && (
+              <>
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
+              </>
+            )}
+
+            {!loading && posts.length === 0 && (
+              <Text style={styles.empty}>
+                No posts yet 👀  
+                Be the first one to post!
+              </Text>
+            )}
           </>
+        }
+        renderItem={({ item }) => (
+          <PostCard
+            post={{
+              ...item,
+              likeCount: item.likeCount ?? 0,
+              commentCount: item.commentCount ?? 0,
+            }}
+            onCommentPress={(postId)=>{
+              console.log("OPEN COMMENTS FOR", postId, "sheetRef:", sheetRef.current);
+              // ensure activePostId updates before presenting the sheet
+              setActivePostId(postId);
+              setTimeout(() => {
+                console.log("calling present() (from comment) ", sheetRef.current);
+                sheetRef.current?.present();
+                setTimeout(() => {
+                  console.log("calling expand() (from comment)", sheetRef.current);
+                  sheetRef.current?.expand?.();
+                }, 120);
+              }, 120);
+            }}
+          />
         )}
-
-        {/* 📭 EMPTY STATE */}
-        {!loading && posts.length === 0 && (
-          <Text style={styles.empty}>
-            No posts yet 👀  
-            Be the first one to post!
-          </Text>
-        )}
-
-        {/* 📰 FEED */}
-        {!loading &&
-          posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={{
-                   ...post,
-                  likeCount: post.likeCount ?? 0,
-                  commentCount: post.commentCount ?? 0,
-              }}
-              />
-
-          ))}
-      </ScrollView>
+      />
 
       {/* ➕ FAB */}
       <FloatingActionButton
         onPress={() => router.push("/create-post" as any)}
+      />
+
+      {/* 💬 ONE GLOBAL COMMENTS BOTTOM SHEET */}
+      <CommentsBottomSheet
+        ref={sheetRef}
+        postId={activePostId}
       />
     </BaseScreen>
   );
 }
 
 /* ---------------- COMPONENTS ---------------- */
-
-
 
 function SkeletonCard() {
   const shimmer = useRef(new Animated.Value(0.3)).current;
@@ -110,30 +150,6 @@ const styles = StyleSheet.create({
     color: "#9ca3af",
     marginTop: 20,
     fontSize: 14,
-  },
-
-  card: {
-    backgroundColor: "#1c1c1e",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-  },
-
-  cardText: {
-    fontSize: 15,
-    color: "#ffffff",
-    lineHeight: 20,
-    marginBottom: 8,
-  },
-
-  meta: {
-    flexDirection: "row",
-    gap: 16,
-  },
-
-  metaText: {
-    fontSize: 13,
-    color: "#9ca3af",
   },
 
   skeleton: {
