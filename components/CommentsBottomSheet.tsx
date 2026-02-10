@@ -13,6 +13,7 @@ import {
 } from "firebase/firestore";
 import { forwardRef, useEffect, useMemo, useState } from "react";
 import {
+    Image,
     StyleSheet,
     Text,
     TextInput,
@@ -26,6 +27,7 @@ type Comment = {
   text: string;
   uid: string;
   authorName: string;
+  authorPhoto?: string | null;
   createdAt: any;
 };
 
@@ -111,12 +113,32 @@ const CommentsBottomSheet = forwardRef<BottomSheetModal, Props>(
           <BottomSheetFlatList
             data={comments}
             keyExtractor={(item: Comment) => item.id}
-            renderItem={({ item }: { item: Comment }) => (
-              <View style={styles.comment}>
-                <Text style={styles.author}>{item.authorName}</Text>
-                <Text style={styles.text}>{item.text}</Text>
-              </View>
-            )}
+            renderItem={({ item }: { item: Comment }) => {
+              const initials =
+                (item.authorName ?? "U")
+                  .trim()
+                  .split(/\s+/)
+                  .map((p) => p[0])
+                  .slice(0, 2)
+                  .join("")
+                  .toUpperCase() || "U";
+
+              return (
+                <View style={styles.comment}>
+                  {item.authorPhoto ? (
+                    <Image source={{ uri: item.authorPhoto }} style={styles.avatar} />
+                  ) : (
+                    <View style={styles.avatarFallback}>
+                      <Text style={styles.avatarText}>{initials}</Text>
+                    </View>
+                  )}
+                  <View style={styles.commentBody}>
+                    <Text style={styles.author}>{item.authorName}</Text>
+                    <Text style={styles.text}>{item.text}</Text>
+                  </View>
+                </View>
+              );
+            }}
           />
 
           {/* Input */}
@@ -162,8 +184,32 @@ const styles = StyleSheet.create({
 
   comment: {
     paddingVertical: 10,
+    flexDirection: "row",
+    gap: 10,
     borderBottomWidth: 0.5,
     borderBottomColor: "#222",
+  },
+  avatar: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: "#2a2a2d",
+  },
+  avatarFallback: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: "#2a2a2d",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarText: {
+    color: "#FFD600",
+    fontWeight: "700",
+    fontSize: 10,
+  },
+  commentBody: {
+    flex: 1,
   },
 
   author: {

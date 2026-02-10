@@ -64,7 +64,7 @@ export default function HomeScreen() {
                 }, 120);
               }}
             >
-              <Text style={{ color: "#9ca3af", marginBottom: 8 }}>Open comments (debug)</Text>
+              <Text style={{ color: "#9ca3af", marginBottom: 8 }}></Text>
             </TouchableOpacity>
 
             {loading && (
@@ -89,6 +89,8 @@ export default function HomeScreen() {
               ...item,
               likeCount: item.likeCount ?? 0,
               commentCount: item.commentCount ?? 0,
+              authorName: item.authorName ?? "Unknown",
+              authorPhoto: item.authorPhoto ?? null,
             }}
             onCommentPress={(postId)=>{
               console.log("OPEN COMMENTS FOR", postId, "sheetRef:", sheetRef.current);

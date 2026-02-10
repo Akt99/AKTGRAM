@@ -1,5 +1,6 @@
 // app/(auth)/Login.tsx
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
 import React from "react";
@@ -45,15 +46,20 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      {/* Logo */}
-      <Image
-        source={require("../assets/images/aktgramicon.png")}
-        style={styles.logo}
-      />
+      {/* Company Logo */}
+      <View style={styles.starBadge}>
+        <Ionicons name="star" size={18} color="#FFD600" />
+      </View>
 
       {/* Brand */}
       <Text style={styles.brand}>AKTGRAM</Text>
       <Text style={styles.tagline}>Connect with the world</Text>
+
+      {/* Hero Image */}
+      <Image
+        source={require("../assets/images/aktgramicon.png")}
+        style={styles.logo}
+      />
 
       {/* Google Button */}
       <TouchableOpacity
@@ -82,9 +88,18 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 96,
-    height: 96,
-    marginBottom: 20,
+    width: 200,
+    height: 200,
+    marginBottom: 36,
+  },
+  starBadge: {
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: "#1b1b1d",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 14,
   },
 
   brand: {
@@ -99,7 +114,7 @@ const styles = StyleSheet.create({
     fontFamily: "JB-Regular",
     fontSize: 13,
     color: "#888",
-    marginBottom: 48,
+    marginBottom: 28,
   },
 
   googleButton: {

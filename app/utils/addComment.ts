@@ -22,6 +22,7 @@ export async function addComment(
     text,
     uid: user.uid,
     authorName: user.displayName ?? "Anonymous",
+    authorPhoto: user.photoURL ?? null,
     createdAt: serverTimestamp(),
   });
 

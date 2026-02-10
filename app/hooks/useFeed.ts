@@ -12,6 +12,8 @@ export type Post = {
   text: string;
   caption: string;
   uid: string;
+  authorName?: string | null;
+  authorPhoto?: string | null;
   createdAt: any;
   likeCount?: number;
   commentCount?: number;
