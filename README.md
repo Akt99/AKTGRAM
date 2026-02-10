@@ -1,50 +1,56 @@
-### Powered by Firebase 🔥
+# AKTGRAM
+Minimal social, maximum signal. AKTGRAM is a focused micro‑social prototype built for fast posting, lightweight engagement, and a clean creator‑first UI.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Why It Exists
+AKTGRAM explores a niche: a private‑feeling social feed with a creator‑grade UI, tuned for quick posts, fast reads, and frictionless engagement.
 
-## Get started
+## Stack
+- Expo + React Native (iOS/Android)
+- Firebase as BaaS (Backend‑as‑a‑Service)
+- Firestore for posts, likes, and comments
+- Firebase Auth for Google sign‑in
 
+## Firebase, In Practice
+- Firebase BaaS: zero‑ops backend to ship fast without managing servers
+- Firestore: real‑time feed, ordered timelines, and comment threads
+- Firebase Auth: identity and session management
+- (Optional) Firebase Storage: media uploads when enabled
+
+## Features
+- Real‑time feed with likes and comments
+- Profile photos on posts and comments
+- Google sign‑in
+- Clean, dark, creator‑centric UI
+
+## Local Setup
 1. Install dependencies
-
    ```bash
    npm install
    ```
 
 2. Start the app
-
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+## Environment Variables
+Create a `.env` file in the project root:
 ```bash
-npm run reset-project
+EXPO_PUBLIC_FIREBASE_API_KEY=...
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=...
+EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET=...
+EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+EXPO_PUBLIC_FIREBASE_APP_ID=...
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=...
+EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=...
+EXPO_PUBLIC_GOOGLE_EXPO_CLIENT_ID=...
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Notes
+- If you use a custom dev client, rebuild after native config changes.
+- Storage uploads require a Firebase Storage bucket.
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Credits
+- Built with [Expo](https://expo.dev)
+- Firebase by [Google](https://firebase.google.com)
