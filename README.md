@@ -1,4 +1,4 @@
-# AKTGRAM
+# AKTGRAM (Social Media Template): 
 Minimal social, maximum signal. AKTGRAM is a focused micro‑social prototype built for fast posting, lightweight engagement, and a clean creator‑first UI.
 
 ## Why It Exists
@@ -21,6 +21,9 @@ AKTGRAM explores a niche: a private‑feeling social feed with a creator‑grade
 - Profile photos on posts and comments
 - Google sign‑in
 - Clean, dark, creator‑centric UI
+## Limitations:
+- Firestore doesn't allow media storage for free, paid subscription is needed, hence photos can't be posted as of now
+
 
 ## Local Setup
 1. Install dependencies
