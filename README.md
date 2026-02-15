@@ -1,6 +1,9 @@
 # AKTGRAM (Social Media Template): 
 Minimal social, maximum signal. AKTGRAM is a focused micro‑social prototype built for fast posting, lightweight engagement, and a clean creator‑first UI.
 
+# Demo Video: 
+https://drive.google.com/file/d/1qlU4E-4tUiZQ_8WBk5mQqwWB6XhGTBPR/view?usp=drive_link
+
 ## Why It Exists
 AKTGRAM explores a niche: a private‑feeling social feed with a creator‑grade UI, tuned for quick posts, fast reads, and frictionless engagement.
 
