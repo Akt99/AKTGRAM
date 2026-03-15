@@ -54,7 +54,7 @@ EXPO_PUBLIC_GOOGLE_EXPO_CLIENT_ID=...
 ```
 
 ## Notes
-- If you use a custom dev client, rebuild after native config changes.
+- If you use a custom dev client, rebuild after native config changes real-time
 - Storage uploads require a Firebase Storage bucket.
 
 ## Credits
